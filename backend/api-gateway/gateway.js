@@ -21,8 +21,8 @@ app.use("/", (req, res,next) => {
 });
 
 const proxyTargets = {
-  signup: "http://localhost:5001",
-  login: "http://localhost:5002",
+  signup: "http://microservice2-signup-1:5001",
+  login: "http://microservice2-login-1:5002",
 };
 
 app.use(

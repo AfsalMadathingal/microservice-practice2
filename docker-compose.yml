@@ -3,7 +3,7 @@ version: '1.0.0'
 services:
   api-gateway:
     build: 
-      context: ./api-gateway
+      context: ./backend/api-gateway
       dockerfile: Dockerfile
     ports:
       - "9000:9000" # Adjust the port as needed
@@ -14,7 +14,7 @@ services:
 
   login:
     build: 
-      context: ./login-service
+      context: ./backend/login-service
       dockerfile: Dockerfile
     ports:
       - "5002:5002" # Adjust the port as needed
@@ -26,7 +26,7 @@ services:
 
   signup:
     build: 
-      context: ./signup-service
+      context: ./backend/signup-service
       dockerfile: Dockerfile
     ports:
       - "5001:5001" # Adjust the port as needed
@@ -38,7 +38,7 @@ services:
 
   rabbitmq:
     image: "rabbitmq:latest"
-    container_name: rabbitmq
+    container_name: rabbitmq-forloginserivce
     restart: unless-stopped
     ports:
       - "5672:5672"

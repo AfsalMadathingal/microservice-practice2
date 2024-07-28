@@ -12,20 +12,26 @@ const Login = () => {
     
     const { email, password } = data;
 
-    const res = await axios.post('http://localhost:9000/api/login/user', {
-      email,
-      password,
-    });
+    try {
+      const res = await axios.post('http://localhost:9000/api/login/user', {
+        email,
+        password,
+      });
+  
+      console.log(res.data);
+  
+      if (res.data.success) {
+        navigate('/');
+      }else{
+        alert(res.data.message);
+      }
+      
+    } catch (error) {
 
-    console.log(res.data);
-
-    if (res.data.success) {
-      navigate('/');
-    }else{
-      alert(res.data.message);
+      alert(error.response.data.message);
+      
     }
 
-    console.log(data);
   };
 
   return (
