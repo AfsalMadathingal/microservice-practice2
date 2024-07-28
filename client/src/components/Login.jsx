@@ -1,11 +1,30 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const onSubmit = data => {
-    // Handle the login API call here
+  const navigate = useNavigate();
+
+  const onSubmit = async data => {
+    
+    const { email, password } = data;
+
+    const res = await axios.post('http://localhost:9000/api/login/user', {
+      email,
+      password,
+    });
+
+    console.log(res.data);
+
+    if (res.data.success) {
+      navigate('/');
+    }else{
+      alert(res.data.message);
+    }
+
     console.log(data);
   };
 
@@ -69,7 +88,7 @@ const Login = () => {
       <div className="px-8 py-4 bg-blue-200 dark:bg-zinc-800">
         <div className="text-sm text-blue-900 dark:text-blue-300 text-center">
           Don't have an account?
-          <a className="font-medium underline" href="#">Sign up</a>
+          <a className="font-medium underline" onClick={() => navigate('/signup')}>Sign up</a>
         </div>
       </div>
     </form>

@@ -5,6 +5,10 @@ const signup = async (req, res) => {
     try {
         
         const {email, password} = req.body;
+        const checkUser = await userDB.findOne({email});
+        if(checkUser){
+            return res.status(400).json({success: false, message: "User already exists"});
+        }
         const user = await userDB.create({email, password});
 
         const channel = getChannel();
@@ -16,7 +20,7 @@ const signup = async (req, res) => {
             password: user.password
         })));
 
-        res.status(201).json({message: "User created successfully"});
+        res.status(201).json({success: true, message: "User created successfully"});
 
 
     } catch (error) {

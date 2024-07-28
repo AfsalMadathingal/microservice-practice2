@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const { connectDB } = require("./config/db");
+const  {login } = require("./controller/loginController");
 const { connectRabbitMQ, listenForNewUser } = require("./config/rabbitmq");
 require("dotenv").config();
 
@@ -10,9 +11,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
-    res.send("Hello World!");
-});
+app.post('/user',login)
 
 
 async function startServer() {
