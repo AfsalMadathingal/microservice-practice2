@@ -1,5 +1,5 @@
 const amqp = require('amqplib');
-
+const userModel = require('../model/userModel');
 let channel;
 
 async function connectRabbitMQ() {
@@ -25,4 +25,21 @@ function getChannel() {
   return channel;
 }
 
-module.exports = { connectRabbitMQ, getChannel };
+async function listenForNewUser() {
+    const channel = getChannel();
+    await channel.assertQueue('user_created');
+    channel.consume('user_created', async (msg) => {
+      if (msg !== null) {
+        const user = JSON.parse(msg.content.toString());
+        console.log('user_created :', user);
+        const {_id, email, password} = user;
+        const userReference = new userModel({_id, email, password});
+        await userReference.save();
+        console.log(`Initialized user document for  ${user}`);
+        channel.ack(msg);
+      }
+    });
+  }
+
+
+module.exports = { connectRabbitMQ, getChannel , listenForNewUser} ;

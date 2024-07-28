@@ -26,17 +26,17 @@ const proxyTargets = {
 };
 
 app.use(
-  "/api/posts",
+  "/api/signup",
   createProxyMiddleware({
-    target: proxyTargets.post,
+    target: proxyTargets.signup,
     changeOrigin: true,
     
   })
 );
 app.use(
-  "/api/comments",
+  "/api/login",
   createProxyMiddleware({
-    target: proxyTargets.comment,
+    target: proxyTargets.login,
     changeOrigin: true,
   })
 );
