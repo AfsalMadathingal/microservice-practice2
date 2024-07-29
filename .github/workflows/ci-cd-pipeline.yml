@@ -1,0 +1,50 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # or your default branch
+  pull_request:
+    branches:
+      - main  # or your default branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Cache Docker layers
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.docker/cache
+        key: ${{ runner.os }}-docker-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-docker-
+
+    - name: Build Docker image
+      run: |
+        docker build -t your-dockerhub-username/api-gateway:latest ./path/to/api-gateway
+        docker build -t your-dockerhub-username/login-service:latest ./path/to/login-service
+        docker build -t your-dockerhub-username/signup-service:latest ./path/to/signup-service
+
+    - name: Push Docker images
+      run: |
+        echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+        docker push your-dockerhub-username/api-gateway:latest
+        docker push your-dockerhub-username/login-service:latest
+        docker push your-dockerhub-username/signup-service:latest
+
+    - name: Deploy to Kubernetes
+      uses: azure/setup-kubectl@v2
+      with:
+        version: 'latest'
+      run: |
+        kubectl apply -f ./k8s/deployment.yaml
+        kubectl apply -f ./k8s/service.yaml
