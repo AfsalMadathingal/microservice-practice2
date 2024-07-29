@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: signup-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: signup-service
+  template:
+    metadata:
+      labels:
+        app: signup-service
+    spec:
+      containers:
+      - name: signup-service
+        image: afsalmadathingal/microservice2-signup:latest
+        ports:
+        - containerPort: 5001
+        env:
+        - name: RABBITMQ_URL
+          value: amqp://rabbitmq
+        - name: MONGO_URI
+          value: mongodb+srv://madathingalafsal:Afsal%40090797@OURSHOP.mkqpdg9.mongodb.net/signup-service

@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: login-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: login-service
+  template:
+    metadata:
+      labels:
+        app: login-service
+    spec:
+      containers:
+      - name: login-service
+        image: afsalmadathingal/microservice2-login:latest
+        ports:
+        - containerPort: 5002
+        env:
+        - name: RABBITMQ_URL
+          value: amqp://rabbitmq
+        - name: MONGO_URI
+          value: mongodb+srv://madathingalafsal:Afsal%40090797@OURSHOP.mkqpdg9.mongodb.net/login-service
